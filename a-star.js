@@ -1,3 +1,6 @@
+// Define the NxN size
+const N = 3;
+
 class Node {
   constructor(matrix, x, y, moves, parent) {
     this.parent = parent;
@@ -22,8 +25,21 @@ class Tile {
   }
 }
 
-export function solve(initial, final) {}
+// Function to calculate the number of misplaced tiles
+function calculateCost(initial, final) {
+  let count = 0;
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < N; j++) {
+      if (initial[i][j] && initial[i][j] !== final[i][j]) {
+        count++;
+      }
+    }
+  }
 
+  return count;
+}
+
+// Function to find the coordinates of the zero in the matrix
 function findZeroCoordinate(matrix) {
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
@@ -34,6 +50,116 @@ function findZeroCoordinate(matrix) {
   }
   // If zero is not found, return null or any other appropriate value
   return null;
+}
+
+export function solve(initial, final) {
+  let x, y;
+
+  [x, y] = findZeroCoordinate(initial);
+
+  const pq = [];
+
+  const root = new Node(initial, x, y, 0, null);
+  root.cost = calculateCost(root.matrix, final);
+
+  pq.push(root);
+
+  validMoves(root, final);
+}
+
+function newNode(matrix, x, y, newX, newY, moves, parent) {
+  const node = new Node(matrix, x, y, moves, parent);
+
+  // Move tile by 1 position
+  [node.matrix[x][y], node.matrix[newX][newY]] = [
+    node.matrix[newX][newY],
+    node.matrix[x][y],
+  ];
+
+  // Update new blank tile coordinates
+  node.x = newX;
+  node.y = newY;
+
+  return node;
+}
+
+function validMoves(node, final) {
+  const arrayWithMoves = [];
+
+  for (let i = 0; i < 4; i++) {
+    switch (i) {
+      case 0: // move to the left
+        if (isSafe(node.x - 1, node.y)) {
+          const child = newNode(
+            node.matrix,
+            node.x,
+            node.y,
+            node.x - 1,
+            node.y,
+            node.moves,
+            node
+          );
+          child.cost = calculateCost(child.matrix, final);
+          arrayWithMoves.push(child);
+        }
+        break;
+      case 1: // move to the right
+        if (isSafe(node.x + 1, node.y)) {
+          const child = newNode(
+            node.matrix,
+            node.x,
+            node.y,
+            node.x + 1,
+            node.y,
+            node.moves,
+            node
+          );
+          child.cost = calculateCost(child.matrix, final);
+          arrayWithMoves.push(child);
+        }
+        break;
+      case 2: // move up
+        if (isSafe(node.x, node.y - 1)) {
+          const child = newNode(
+            node.matrix,
+            node.x,
+            node.y,
+            node.x,
+            node.y - 1,
+            node.moves,
+            node
+          );
+          child.cost = calculateCost(child.matrix, final);
+          arrayWithMoves.push(child);
+        }
+        break;
+      case 3: // move down
+        if (isSafe(node.x, node.y + 1)) {
+          const child = newNode(
+            node.matrix,
+            node.x,
+            node.y,
+            node.x,
+            node.y + 1,
+            node.moves,
+            node
+          );
+          child.cost = calculateCost(child.matrix, final);
+          arrayWithMoves.push(child);
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  console.log(arrayWithMoves);
+}
+
+// Function to check if (x, y) is a valid matrix coordinate
+function isSafe(x, y) {
+  return x >= 0 && x < N && y >= 0 && y < N;
 }
 
 function printMatrix(matrix) {
