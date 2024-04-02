@@ -64,7 +64,34 @@ export function solve(initial, final) {
 
   pq.push(root);
 
-  validMoves(root, final);
+  while (pq.length > 0) {
+    pq.sort(compareNodes);
+
+    // Removes the node with the lowest cost
+    const min = pq.shift();
+
+    if (min.cost === 0) {
+      console.log(min);
+      console.log(printMatrix(min.matrix));
+      return;
+    }
+
+    let arrayWithMoves = validMoves(min, final);
+    pq.push(...arrayWithMoves);
+  }
+}
+
+function compareNodes(lhs, rhs) {
+  const lhsTotal = lhs.cost + lhs.moves;
+  const rhsTotal = rhs.cost + rhs.moves;
+
+  if (lhsTotal < rhsTotal) {
+    return -1;
+  } else if (lhsTotal > rhsTotal) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 function newNode(matrix, x, y, newX, newY, moves, parent) {
@@ -84,77 +111,35 @@ function newNode(matrix, x, y, newX, newY, moves, parent) {
 }
 
 function validMoves(node, final) {
+  const moves = [
+    { dx: -1, dy: 0 }, // move to the left
+    { dx: 1, dy: 0 }, // move to the right
+    { dx: 0, dy: -1 }, // move up
+    { dx: 0, dy: 1 }, // move down
+  ];
+
   const arrayWithMoves = [];
 
-  for (let i = 0; i < 4; i++) {
-    switch (i) {
-      case 0: // move to the left
-        if (isSafe(node.x - 1, node.y)) {
-          const child = newNode(
-            node.matrix,
-            node.x,
-            node.y,
-            node.x - 1,
-            node.y,
-            node.moves,
-            node
-          );
-          child.cost = calculateCost(child.matrix, final);
-          arrayWithMoves.push(child);
-        }
-        break;
-      case 1: // move to the right
-        if (isSafe(node.x + 1, node.y)) {
-          const child = newNode(
-            node.matrix,
-            node.x,
-            node.y,
-            node.x + 1,
-            node.y,
-            node.moves,
-            node
-          );
-          child.cost = calculateCost(child.matrix, final);
-          arrayWithMoves.push(child);
-        }
-        break;
-      case 2: // move up
-        if (isSafe(node.x, node.y - 1)) {
-          const child = newNode(
-            node.matrix,
-            node.x,
-            node.y,
-            node.x,
-            node.y - 1,
-            node.moves,
-            node
-          );
-          child.cost = calculateCost(child.matrix, final);
-          arrayWithMoves.push(child);
-        }
-        break;
-      case 3: // move down
-        if (isSafe(node.x, node.y + 1)) {
-          const child = newNode(
-            node.matrix,
-            node.x,
-            node.y,
-            node.x,
-            node.y + 1,
-            node.moves,
-            node
-          );
-          child.cost = calculateCost(child.matrix, final);
-          arrayWithMoves.push(child);
-        }
-        break;
+  for (const move of moves) {
+    const newX = node.x + move.dx;
+    const newY = node.y + move.dy;
 
-      default:
-        break;
+    if (isSafe(newX, newY)) {
+      const child = newNode(
+        node.matrix,
+        node.x,
+        node.y,
+        newX,
+        newY,
+        node.moves + 1,
+        node
+      );
+      child.cost = calculateCost(child.matrix, final);
+      arrayWithMoves.push(child);
     }
   }
 
-  console.log(arrayWithMoves);
+  return arrayWithMoves;
 }
 
 // Function to check if (x, y) is a valid matrix coordinate
@@ -166,5 +151,4 @@ function printMatrix(matrix) {
   for (let i = 0; i < 3; i++) {
     console.log(matrix[i].join(" "));
   }
-  console.log("\n");
 }
