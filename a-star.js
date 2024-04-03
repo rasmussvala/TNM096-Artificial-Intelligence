@@ -17,14 +17,6 @@ class Node {
   }
 }
 
-class Tile {
-  constructor(number, x, y) {
-    this.number = number;
-    this.x = x;
-    this.y = y;
-  }
-}
-
 // Function to calculate the number of misplaced tiles
 function calculateCost(initial, final) {
   let count = 0;
@@ -51,8 +43,7 @@ function findZeroCoordinate(matrix) {
   // If zero is not found, return null or any other appropriate value
   return null;
 }
-
-export function solve(initial, final) {
+function solve(initial, final) {
   let x, y;
 
   [x, y] = findZeroCoordinate(initial);
@@ -65,7 +56,7 @@ export function solve(initial, final) {
   pq.push(root);
 
   while (pq.length > 0) {
-    pq.sort(compareNodes);
+    pq.sort((a, b) => a.cost + a.moves - b.cost + b.moves);
 
     // Removes the node with the lowest cost
     const min = pq.shift();
@@ -78,19 +69,6 @@ export function solve(initial, final) {
 
     let arrayWithMoves = validMoves(min, final);
     pq.push(...arrayWithMoves);
-  }
-}
-
-function compareNodes(lhs, rhs) {
-  const lhsTotal = lhs.cost + lhs.moves;
-  const rhsTotal = rhs.cost + rhs.moves;
-
-  if (lhsTotal < rhsTotal) {
-    return -1;
-  } else if (lhsTotal > rhsTotal) {
-    return 1;
-  } else {
-    return 0;
   }
 }
 
@@ -152,3 +130,5 @@ function printMatrix(matrix) {
     console.log(matrix[i].join(" "));
   }
 }
+
+exports.solve = solve;

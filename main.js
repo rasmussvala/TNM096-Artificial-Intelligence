@@ -1,4 +1,4 @@
-import { solve } from "./a-star.js";
+const { solve } = require("./a-star.js");
 
 const initial = [
   [7, 2, 4],
