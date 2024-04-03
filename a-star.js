@@ -43,32 +43,35 @@ function findZeroCoordinate(matrix) {
   // If zero is not found, return null or any other appropriate value
   return null;
 }
-function solve(initial, final) {
+export function solve(initial, final) {
   let x, y;
 
   [x, y] = findZeroCoordinate(initial);
 
-  const pq = [];
+  const openL = [];
+  const closeL = new Set();
 
   const root = new Node(initial, x, y, 0, null);
   root.cost = calculateCost(root.matrix, final);
 
-  pq.push(root);
+  openL.push(root);
 
-  while (pq.length > 0) {
-    pq.sort((a, b) => a.cost + a.moves - b.cost + b.moves);
+  while (openL.length > 0) {
+    openL.sort((a, b) => a.cost + a.moves - b.cost + b.moves);
 
     // Removes the node with the lowest cost
-    const min = pq.shift();
+    const min = openL.shift();
 
     if (min.cost === 0) {
-      console.log(min);
-      console.log(printMatrix(min.matrix));
+      printPath(min);
       return;
     }
+    const key = min.matrix.toString();
+    closeL.add(key);
 
-    let arrayWithMoves = validMoves(min, final);
-    pq.push(...arrayWithMoves);
+    let arrayWithMoves = validMoves(min, final, closeL);
+
+    openL.push(...arrayWithMoves);
   }
 }
 
@@ -88,7 +91,7 @@ function newNode(matrix, x, y, newX, newY, moves, parent) {
   return node;
 }
 
-function validMoves(node, final) {
+function validMoves(node, final, closeL) {
   const moves = [
     { dx: -1, dy: 0 }, // move to the left
     { dx: 1, dy: 0 }, // move to the right
@@ -113,7 +116,10 @@ function validMoves(node, final) {
         node
       );
       child.cost = calculateCost(child.matrix, final);
-      arrayWithMoves.push(child);
+
+      if (!closeL.has(child.matrix.toString())) {
+        arrayWithMoves.push(child);
+      }
     }
   }
 
@@ -129,6 +135,11 @@ function printMatrix(matrix) {
   for (let i = 0; i < 3; i++) {
     console.log(matrix[i].join(" "));
   }
+  console.log("\n");
 }
 
-exports.solve = solve;
+function printPath(root) {
+  if (!root) return;
+  printPath(root.parent);
+  printMatrix(root.matrix);
+}
