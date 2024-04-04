@@ -128,16 +128,36 @@ class Node {
 }
 
 // Function to calculate the number of misplaced tiles
-function calculateCost(initial, final) {
+function calculateCost(initial, final, heuristic) {
   let count = 0;
-  for (let i = 0; i < N; i++) {
-    for (let j = 0; j < N; j++) {
-      if (initial[i][j] && initial[i][j] !== final[i][j]) {
-        count++;
-      }
-    }
-  }
 
+  switch (heuristic) {
+    case "h1":
+      // Count misplaced tiles heuristic
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          if (initial[i][j] && initial[i][j] !== final[i][j]) {
+            count++;
+          }
+        }
+      }
+      break;
+    case "h2":
+      // Manhattan distance heuristic
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          const value = initial[i][j];
+          if (value !== 0 && value !== final[i][j]) {
+            const targetX = Math.floor((value - 1) / N);
+            const targetY = (value - 1) % N;
+            count += Math.abs(targetX - i) + Math.abs(targetY - j);
+          }
+        }
+      }
+      break;
+    default:
+      throw new Error("Invalid heuristic specified");
+  }
   return count;
 }
 
@@ -153,7 +173,7 @@ function findZeroCoordinate(matrix) {
   // If zero is not found, return null or any other appropriate value
   return null;
 }
-export function solve(initial, final) {
+export function solve(initial, final, heuristic) {
   let x, y;
 
   [x, y] = findZeroCoordinate(initial);
@@ -162,7 +182,7 @@ export function solve(initial, final) {
   const closeL = new Set();
 
   const root = new Node(initial, x, y, 0, null);
-  root.cost = calculateCost(root.matrix, final);
+  root.cost = calculateCost(root.matrix, final, heuristic);
 
   openL.add(root);
 
@@ -177,7 +197,7 @@ export function solve(initial, final) {
     const key = min.matrix.toString();
     closeL.add(key);
 
-    let arrayWithMoves = validMoves(min, final, closeL);
+    let arrayWithMoves = validMoves(min, final, closeL, heuristic);
 
     for (let i = 0; i < arrayWithMoves.length; i++) {
       openL.add(arrayWithMoves[i]);
@@ -201,7 +221,7 @@ function newNode(matrix, x, y, newX, newY, moves, parent) {
   return node;
 }
 
-function validMoves(node, final, closeL) {
+function validMoves(node, final, closeL, heuristic) {
   const moves = [
     { dx: -1, dy: 0 }, // move to the left
     { dx: 1, dy: 0 }, // move to the right
@@ -225,7 +245,7 @@ function validMoves(node, final, closeL) {
         node.moves + 1,
         node
       );
-      child.cost = calculateCost(child.matrix, final);
+      child.cost = calculateCost(child.matrix, final, heuristic);
 
       if (!closeL.has(child.matrix.toString())) {
         arrayWithMoves.push(child);
