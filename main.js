@@ -1,6 +1,6 @@
-import { solve } from "./a-star.js";
+const { solve } = require("./a-star.js");
 
-const test = [
+const test1 = [
   [3, 1, 6],
   [2, 7, 5],
   [4, 8, 0],
@@ -34,19 +34,27 @@ const final = [
 
 // Solve using h1 heuristic
 const startTimeH1 = performance.now();
-solve(hard2, final, "h1");
+const movesH1 = solve(hard2, final, "h1");
 const endTimeH1 = performance.now();
-
-console.log("DONE!");
+console.log("DONE! \n");
 
 // Solve using h2 heuristic
 const startTimeH2 = performance.now();
-solve(hard2, final, "h2");
+const movesH2 = solve(hard2, final, "h2");
 const endTimeH2 = performance.now();
+console.log("DONE! \n");
 
 console.log(
-  "Time taken by h1: " + (endTimeH1 - startTimeH1).toFixed(1) + " milliseconds"
+  "Time taken by h1: " +
+    (endTimeH1 - startTimeH1).toFixed(1) +
+    " ms with " +
+    movesH1 +
+    " moves."
 );
 console.log(
-  "Time taken by h2: " + (endTimeH2 - startTimeH2).toFixed(1) + " milliseconds"
+  "Time taken by h2: " +
+    (endTimeH2 - startTimeH2).toFixed(1) +
+    " ms with " +
+    movesH2 +
+    " moves."
 );

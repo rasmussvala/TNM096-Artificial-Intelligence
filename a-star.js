@@ -173,7 +173,7 @@ function findZeroCoordinate(matrix) {
   // If zero is not found, return null or any other appropriate value
   return null;
 }
-export function solve(initial, final, heuristic) {
+function solve(initial, final, heuristic) {
   let x, y;
 
   [x, y] = findZeroCoordinate(initial);
@@ -192,7 +192,7 @@ export function solve(initial, final, heuristic) {
 
     if (min.cost === 0) {
       printPath(min);
-      return;
+      return min.moves;
     }
     const key = min.matrix.toString();
     closeL.add(key);
@@ -273,3 +273,5 @@ function printPath(root) {
   printPath(root.parent);
   printMatrix(root.matrix);
 }
+
+module.exports = { solve };
