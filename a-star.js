@@ -75,7 +75,8 @@ class MinHeap {
     let index = this.heap.length - 1;
     while (
       this.hasParent(index) &&
-      this.parent(index).cost > this.heap[index].cost
+      this.parent(index).cost + this.parent(index).moves >
+        this.heap[index].cost + this.heap[index].moves
     ) {
       this.swap(this.getParentIndex(index), index);
       index = this.getParentIndex(index);
@@ -89,11 +90,15 @@ class MinHeap {
       let smallerChildIndex = this.getLeftChildIndex(index);
       if (
         this.hasRightChild(index) &&
-        this.rightChild(index).cost < this.leftChild(index).cost
+        this.rightChild(index).cost + this.rightChild(index).moves <
+          this.leftChild(index).cost + this.leftChild(index).moves
       ) {
         smallerChildIndex = this.getRightChildIndex(index);
       }
-      if (this.heap[index].cost < this.heap[smallerChildIndex].cost) {
+      if (
+        this.heap[index].cost + this.heap[index].moves <
+        this.heap[smallerChildIndex].cost + this.heap[smallerChildIndex].moves
+      ) {
         break;
       } else {
         this.swap(index, smallerChildIndex);
