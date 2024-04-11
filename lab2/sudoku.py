@@ -37,14 +37,14 @@ print("\nStart:")
 # )
 
 # ------ harder
-# puzzle = Sudoku(
-#     "4173698.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......"
-# )
+puzzle = Sudoku(
+    "4173698.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......"
+)
 
 # ------ hardest
-puzzle = Sudoku(
-    "1....7.9..3..2...8..96..5....53..9...1..8...26....4...3......1..4......7..7...3.."
-)
+# puzzle = Sudoku(
+#     "1....7.9..3..2...8..96..5....53..9...1..8...26....4...3......1..4......7..7...3.."
+# )
 
 puzzle.display(puzzle.infer_assignment())
 start = time()
@@ -54,8 +54,8 @@ start = time()
 
 # depth_first_graph_search(puzzle)
 # backtracking_search(puzzle)
-# AC3(puzzle)
-min_conflicts(puzzle)
+AC3(puzzle)
+# min_conflicts(puzzle)
 
 
 # 3. Print the results
