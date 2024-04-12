@@ -35,11 +35,34 @@ class CSP {
     console.log("-------------------------------");
     console.log("\n");
   }
+
+  shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  // Function to add classes randomly to the schedule
+  addClassesRandomly() {
+    const rows = this.schedule.length;
+    const cols = this.schedule[0].length;
+
+    // Shuffle the classes array
+    this.shuffleArray(this.classes);
+
+    let counter = 0;
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        this.schedule[i][j] = this.classes[counter];
+        counter++;
+      }
+    }
+  }
 }
 
-function minConflicts(csp, maxSteps) {
-  // Implement Min-Conflicts algorithm
-}
+function minConflicts(csp, maxSteps) {}
 
 function scheduleClasses(csp) {
   // Implement class scheduling logic to satisfy constraints
@@ -76,7 +99,9 @@ function main() {
   const csp = new CSP(times, classrooms, classes);
   const maxSteps = 100;
 
-  minConflicts(csp, maxSteps);
+  csp.addClassesRandomly();
+
+  // minConflicts(csp, maxSteps);
   //scheduleClasses(csp);
   csp.displaySchedule();
 }
