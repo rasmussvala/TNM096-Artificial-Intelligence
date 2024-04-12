@@ -1,13 +1,48 @@
-class csp {
+class CSP {
   constructor(times, classrooms, classes) {
     this.times = times;
     this.classrooms = classrooms;
     this.classes = classes;
+    this.schedule = this.createEmptySchedule(); // Call the method to initialize schedule
+  }
+
+  createEmptySchedule() {
+    const schedule = [];
+
+    // Fills the schedule with blank strings
+    for (let i = 0; i < this.classrooms.length; i++) {
+      let row = [];
+      for (let j = 0; j < this.times.length; j++) {
+        row.push(" - ");
+      }
+      schedule.push(row);
+    }
+
+    return schedule;
+  }
+
+  displaySchedule() {
+    console.log("\n" + "Classroom Schedule:");
+    console.log("\t" + this.classrooms.join("\t| "));
+    console.log("-------------------------------");
+    for (let i = 0; i < this.times.length; i++) {
+      let scheduleRow = [];
+      for (let j = 0; j < this.classrooms.length; j++) {
+        scheduleRow.push(this.schedule[j][i]);
+      }
+      console.log(this.times[i] + "\t| " + scheduleRow.join("\t| "));
+    }
+    console.log("-------------------------------");
+    console.log("\n");
   }
 }
 
 function minConflicts(csp, maxSteps) {
-  for (i = 0; i < maxSteps; i++) {}
+  // Implement Min-Conflicts algorithm
+}
+
+function scheduleClasses(csp) {
+  // Implement class scheduling logic to satisfy constraints
 }
 
 function main() {
@@ -38,10 +73,12 @@ function main() {
     "MT502",
   ];
 
-  const csp = new csp(times, classrooms, classes);
+  const csp = new CSP(times, classrooms, classes);
   const maxSteps = 100;
 
   minConflicts(csp, maxSteps);
+  //scheduleClasses(csp);
+  csp.displaySchedule();
 }
 
 main();
