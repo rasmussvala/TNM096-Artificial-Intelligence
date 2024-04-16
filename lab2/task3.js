@@ -43,26 +43,86 @@ class CSP {
     }
   }
 
-  // Function to add classes randomly to the schedule
   addClassesRandomly() {
     const rows = this.schedule.length;
     const cols = this.schedule[0].length;
 
-    // Shuffle the classes array
     this.shuffleArray(this.classes);
 
     let counter = 0;
 
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        this.schedule[i][j] = this.classes[counter];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        // @ TODO: fix undefined insert
+        this.schedule[row][col] = this.classes[counter];
         counter++;
       }
     }
   }
-}
 
-function minConflicts(csp, maxSteps) {}
+  minConflicts(maxSteps) {
+    let conflicts = [];
+    const rows = this.schedule.length;
+    const cols = this.schedule[0].length;
+
+    for (let step = 0; step < maxSteps; step++) {
+      // Check for conflicts
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          if (this.hasConflict(i, j)) {
+            conflicts.push({ row: i, col: j });
+          }
+        }
+      }
+
+      if (conflicts.length === 0) {
+        return this.schedule;
+      }
+
+      // // Choose a random conflicted variable
+      // const randomIndex = Math.floor(Math.random() * conflicts.length);
+      // const randomVariable = conflicts[randomIndex];
+    }
+  }
+
+  hasConflict(row, col) {
+    const currentClass = this.schedule[row][col];
+
+    if (!currentClass) {
+      return false;
+    }
+
+    // const time = this.times[col];
+    // const classroom = this.classrooms[row];
+
+    let firstDigit = currentClass[2];
+
+    // Consaint 1: Classes with first digit can not have the same
+    const rows = this.schedule.length;
+    for (let i = 0; i < rows; i++) {
+      let otherClass = this.schedule[i][col];
+
+      if (i !== row && otherClass[2] === firstDigit) {
+        console.log(otherClass[2] + " AND " + firstDigit + " \n");
+        return true;
+      }
+    }
+
+    // // Check constraint 2: Classes with the same first digit cannot be scheduled at the same time
+    // for (let i = 0; i < this.schedule[row].length; i++) {
+    //     if (i !== col && this.schedule[row][i]) {
+    //         const otherClass = this.schedule[row][i];
+    //         const otherFirstDigit = otherClass[2];
+    //         if (firstDigit === otherFirstDigit && classToCheck !== otherClass) {
+    //             // Check if it's not the same class (exception: MT501 and MT502)
+    //             return true; // Conflict found
+    //         }
+    //     }
+    // }
+
+    return false; // No conflict found
+  }
+}
 
 function scheduleClasses(csp) {
   // Implement class scheduling logic to satisfy constraints
@@ -101,8 +161,8 @@ function main() {
 
   csp.addClassesRandomly();
 
-  // minConflicts(csp, maxSteps);
-  //scheduleClasses(csp);
+  csp.minConflicts(maxSteps);
+  // scheduleClasses(csp);
   csp.displaySchedule();
 }
 
