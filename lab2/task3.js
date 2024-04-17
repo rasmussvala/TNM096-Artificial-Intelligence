@@ -180,6 +180,37 @@ class CSP {
   }
 }
 
+function checkPreferences(schedule) {
+  let unsatisfiedPreferences = 0;
+
+  // Loop through each timeslot in the schedule
+  for (let row = 0; row < schedule[0].length; row++) {
+    for (let col = 0; col < schedule.length; col++) {
+      const currentClass = schedule[col][row];
+
+      // Check preference: Avoid classes at 9 am, 12 pm, and 4 pm
+      if (
+        schedule[col][row][0] === "9" ||
+        schedule[col][row][0] === "12" ||
+        schedule[col][row][0] === "16"
+      ) {
+        unsatisfiedPreferences++;
+      }
+
+      // Check preference: Schedule MT501 and MT502 at 1 pm or 2 pm
+      if (
+        (currentClass === "MT501" || currentClass === "MT502") &&
+        schedule[col][row][0] !== "13" &&
+        schedule[col][row][0] !== "14"
+      ) {
+        unsatisfiedPreferences++;
+      }
+    }
+  }
+
+  return unsatisfiedPreferences;
+}
+
 function main() {
   const times = [9, 10, 11, 12, 13, 14, 15, 16];
   const classrooms = ["TP51", "SP34", "K3"];
@@ -211,13 +242,40 @@ function main() {
   const csp = new CSP(times, classrooms, classes);
   const maxSteps = 100000;
 
-  csp.addClassesRandomly();
+  const numRuns = 10; // Number of runs of minConflicts
 
-  if (csp.minConflicts(maxSteps)) {
+  let bestSchedule = null;
+  let minUnsatisfiedPreferences = Infinity;
+
+  for (let run = 0; run < numRuns; run++) {
+    csp.addClassesRandomly();
+    const schedule = csp.minConflicts(maxSteps);
+
+    if (schedule) {
+      const unsatisfiedPreferences = checkPreferences(schedule);
+
+      if (unsatisfiedPreferences < minUnsatisfiedPreferences) {
+        minUnsatisfiedPreferences = unsatisfiedPreferences;
+        bestSchedule = schedule.map((row) => [...row]); // Deep copy of the schedule
+      }
+    } else {
+      console.log(
+        "Run " +
+          (run + 1) +
+          ": Didn't solve the CSP within the max step of " +
+          maxSteps +
+          "."
+      );
+    }
+  }
+
+  if (bestSchedule) {
+    console.log("\nBest Schedule:");
+    csp.schedule = bestSchedule;
     csp.displaySchedule();
   } else {
     console.log(
-      "\nDidn't solve the CSP within the max step of: " + maxSteps + ".\n"
+      "None of the runs solved the CSP within the max step of " + maxSteps + "."
     );
   }
 }
