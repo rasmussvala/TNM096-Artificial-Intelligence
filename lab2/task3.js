@@ -69,9 +69,9 @@ class CSP {
 
   // Main algorithm to solve the CSP
   minConflicts(maxSteps) {
-    let conflicts = [];
-
     for (let step = 0; step < maxSteps; step++) {
+      let conflicts = [];
+
       // Check for conflicts
       for (let col = 0; col < this.cols; col++) {
         for (let row = 0; row < this.rows; row++) {
@@ -86,17 +86,69 @@ class CSP {
       }
 
       if (conflicts.length === 0) {
+        console.log("Solved the CSP in " + step + " steps. ");
         return this.schedule;
+      }
+
+      const randomIndex = Math.floor(Math.random() * conflicts.length);
+      const randomClass = conflicts[randomIndex];
+
+      const { bestRow, bestCol } = this.findBestPlacement(randomClass);
+      this.moveClassToBestPlacement(randomClass, bestRow, bestCol);
+    }
+
+    return null;
+  }
+
+  findBestPlacement(randomClass) {
+    let bestRow = randomClass.row;
+    let bestCol = randomClass.col;
+    let minConflicts = this.countConflicts(randomClass.row, randomClass.col);
+
+    for (let row = 0; row < this.rows; row++) {
+      for (let col = 0; col < this.cols; col++) {
+        if (this.schedule[col][row] === "---") {
+          const conflicts = this.countConflicts(row, col);
+          if (conflicts < minConflicts) {
+            minConflicts = conflicts;
+            bestRow = row;
+            bestCol = col;
+          }
+        }
       }
     }
 
-    const randomIndex = Math.floor(Math.random() * conflicts.length);
-    const randomClass = conflicts[randomIndex];
+    return { bestRow, bestCol };
+  }
 
-    // @TODO: check if randomClass has a better place (also check it's current place again)
-    //        in the schedule by looking potential conflics
-    // @TODO: move the randomClass the the "best" place in the schedule
-    // @TODO: if randomclass has no conflict, remove it from the conflicts array
+  moveClassToBestPlacement(randomClass, bestRow, bestCol) {
+    const currentClass = this.schedule[randomClass.col][randomClass.row];
+
+    // Check if there's already a class scheduled at the best placement
+    if (this.schedule[bestCol][bestRow] !== "---") {
+      // Swap positions of randomClass and the class at the best placement
+      this.schedule[randomClass.col][randomClass.row] =
+        this.schedule[bestCol][bestRow];
+      this.schedule[bestCol][bestRow] = currentClass;
+    } else {
+      // Move randomClass to the best placement
+      this.schedule[randomClass.col][randomClass.row] = "---";
+      this.schedule[bestCol][bestRow] = currentClass;
+    }
+  }
+
+  countConflicts(row, col) {
+    let conflicts = 0;
+    const currentClass = this.schedule[col][row];
+
+    // Check for conflicts in the same timeslot
+    for (let i = 0; i < this.cols; i++) {
+      if (i !== col && this.schedule[i][row][2] === currentClass[2]) {
+        conflicts++;
+      }
+    }
+
+    return conflicts;
   }
 
   // Functions that checks whether or not a class has an conflict in the current place
@@ -146,14 +198,15 @@ function main() {
   ];
 
   const csp = new CSP(times, classrooms, classes);
-  const maxSteps = 1;
+  const maxSteps = 100000;
 
   csp.addClassesRandomly();
 
-  csp.minConflicts(maxSteps);
-  // scheduleClasses(csp);
-
-  csp.displaySchedule();
+  if (csp.minConflicts(maxSteps)) {
+    csp.displaySchedule();
+  } else {
+    console.log("Didn't solve the CSP.");
+  }
 }
 
 main();
