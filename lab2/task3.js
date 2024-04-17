@@ -103,17 +103,17 @@ class CSP {
   hasConflict(row, col) {
     const currentClass = this.schedule[col][row];
 
+    // Check for conflicts in the same timeslot
     for (let i = 0; i < this.cols; i++) {
-      let otherClass = this.schedule[i][col];
-
-      if (
-        i !== row &&
-        otherClass[2] === currentClass[2] &&
-        currentClass[2] !== "-"
-      ) {
-        return true;
+      if (i !== col) {
+        const otherClass = this.schedule[i][row];
+        if (otherClass[2] === currentClass[2] && currentClass[2] !== "-") {
+          return true;
+        }
       }
     }
+
+    return false;
   }
 }
 
