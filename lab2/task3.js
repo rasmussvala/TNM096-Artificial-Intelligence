@@ -13,7 +13,7 @@ class CSP {
     for (let i = 0; i < this.classrooms.length; i++) {
       let row = [];
       for (let j = 0; j < this.times.length; j++) {
-        row.push(" - ");
+        row.push("---");
       }
       schedule.push(row);
     }
@@ -44,6 +44,7 @@ class CSP {
   }
 
   addClassesRandomly() {
+    // May be reversed
     const rows = this.schedule.length;
     const cols = this.schedule[0].length;
 
@@ -53,8 +54,11 @@ class CSP {
 
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        // @ TODO: fix undefined insert
-        this.schedule[row][col] = this.classes[counter];
+        if (counter < this.classes.length) {
+          this.schedule[row][col] = this.classes[counter];
+        } else {
+          this.schedule[row][col] = "---";
+        }
         counter++;
       }
     }
@@ -62,48 +66,55 @@ class CSP {
 
   minConflicts(maxSteps) {
     let conflicts = [];
-    const rows = this.schedule.length;
-    const cols = this.schedule[0].length;
+    const cols = this.schedule.length;
+    const rows = this.schedule[0].length;
 
     for (let step = 0; step < maxSteps; step++) {
       // Check for conflicts
-      for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cols; j++) {
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
           if (this.hasConflict(i, j)) {
-            conflicts.push({ row: i, col: j });
+            conflicts.push({ row: j, col: i, name: this.schedule[i][j] });
           }
         }
       }
 
-      if (conflicts.length === 0) {
-        return this.schedule;
-      }
+      // if (conflicts.length === 0) {
+      //   return this.schedule;
+      // }
+    }
 
-      // // Choose a random conflicted variable
-      // const randomIndex = Math.floor(Math.random() * conflicts.length);
-      // const randomVariable = conflicts[randomIndex];
+    // console.log(conflicts);
+
+    const randomIndex = Math.floor(Math.random() * conflicts.length);
+    const randomClass = conflicts[randomIndex];
+    console.log(conflicts);
+  }
+
+  countConflics(currentClass) {
+    let counter = 0;
+
+    const cols = this.schedule.length;
+    const rows = this.schedule[0].length;
+
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {}
     }
   }
 
   hasConflict(row, col) {
     const currentClass = this.schedule[row][col];
 
-    if (!currentClass) {
-      return false;
-    }
-
-    // const time = this.times[col];
-    // const classroom = this.classrooms[row];
-
-    let firstDigit = currentClass[2];
-
     // Consaint 1: Classes with first digit can not have the same
     const rows = this.schedule.length;
     for (let i = 0; i < rows; i++) {
       let otherClass = this.schedule[i][col];
 
-      if (i !== row && otherClass[2] === firstDigit) {
-        console.log(otherClass[2] + " AND " + firstDigit + " \n");
+      if (
+        i !== row &&
+        otherClass[2] === currentClass[2] &&
+        currentClass[2] !== "-"
+      ) {
         return true;
       }
     }
@@ -124,9 +135,10 @@ class CSP {
   }
 }
 
-function scheduleClasses(csp) {
-  // Implement class scheduling logic to satisfy constraints
-}
+// function scheduleClasses(csp) {
+//   // Implement class scheduling logic to satisfy constraints
+
+// }
 
 function main() {
   const times = [9, 10, 11, 12, 13, 14, 15, 16];
@@ -157,12 +169,13 @@ function main() {
   ];
 
   const csp = new CSP(times, classrooms, classes);
-  const maxSteps = 100;
+  const maxSteps = 1;
 
   csp.addClassesRandomly();
 
   csp.minConflicts(maxSteps);
   // scheduleClasses(csp);
+
   csp.displaySchedule();
 }
 
