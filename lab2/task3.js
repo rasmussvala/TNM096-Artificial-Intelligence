@@ -205,7 +205,9 @@ function main() {
   if (csp.minConflicts(maxSteps)) {
     csp.displaySchedule();
   } else {
-    console.log("Didn't solve the CSP.");
+    console.log(
+      "\nDidn't solve the CSP within the max step of: " + maxSteps + ".\n"
+    );
   }
 }
 
