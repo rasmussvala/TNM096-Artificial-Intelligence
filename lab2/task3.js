@@ -159,6 +159,17 @@ class CSP {
     for (let i = 0; i < this.cols; i++) {
       if (i !== col) {
         const otherClass = this.schedule[i][row];
+
+        // Check if both classes are "MT501" and "MT502"
+        if (
+          (currentClass === "MT501" && otherClass === "MT502") ||
+          (currentClass === "MT502" && otherClass === "MT501")
+        ) {
+          // No conflict if both classes are "MT501" and "MT502"
+          continue;
+        }
+
+        // Check the first digit for conflicts in other classes
         if (otherClass[2] === currentClass[2] && currentClass[2] !== "-") {
           return true;
         }
