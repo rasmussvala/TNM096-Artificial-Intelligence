@@ -3,21 +3,28 @@ class CSP {
     this.times = times;
     this.classrooms = classrooms;
     this.classes = classes;
-    this.schedule = this.createEmptySchedule(); // Call the method to initialize schedule
+
+    // Size of the schedule
+    this.rows = this.times.length;
+    this.cols = this.classrooms.length;
+
+    this.schedule = this.createEmptySchedule(); // IMPORTANT: TO ACCESS A TIMESLOT USE schedule[col][row]
   }
 
+  // Initialize a empty schedule
   createEmptySchedule() {
-    const schedule = [];
+    const col = [];
 
     // Fills the schedule with blank strings
-    for (let i = 0; i < this.classrooms.length; i++) {
+    for (let i = 0; i < this.cols; i++) {
       let row = [];
-      for (let j = 0; j < this.times.length; j++) {
+      for (let j = 0; j < this.rows; j++) {
         row.push("---");
       }
-      schedule.push(row);
+      col.push(row);
     }
 
+    const schedule = col;
     return schedule;
   }
 
@@ -25,9 +32,9 @@ class CSP {
     console.log("\n" + "Classroom Schedule:");
     console.log("\t" + this.classrooms.join("\t| "));
     console.log("-------------------------------");
-    for (let i = 0; i < this.times.length; i++) {
+    for (let i = 0; i < this.rows; i++) {
       let scheduleRow = [];
-      for (let j = 0; j < this.classrooms.length; j++) {
+      for (let j = 0; j < this.cols; j++) {
         scheduleRow.push(this.schedule[j][i]);
       }
       console.log(this.times[i] + "\t| " + scheduleRow.join("\t| "));
@@ -44,70 +51,59 @@ class CSP {
   }
 
   addClassesRandomly() {
-    // May be reversed
-    const rows = this.schedule.length;
-    const cols = this.schedule[0].length;
-
     this.shuffleArray(this.classes);
 
     let counter = 0;
 
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
+    for (let col = 0; col < this.cols; col++) {
+      for (let row = 0; row < this.rows; row++) {
         if (counter < this.classes.length) {
-          this.schedule[row][col] = this.classes[counter];
+          this.schedule[col][row] = this.classes[counter];
         } else {
-          this.schedule[row][col] = "---";
+          this.schedule[col][row] = "---";
         }
         counter++;
       }
     }
   }
 
+  // Main algorithm to solve the CSP
   minConflicts(maxSteps) {
     let conflicts = [];
-    const cols = this.schedule.length;
-    const rows = this.schedule[0].length;
 
     for (let step = 0; step < maxSteps; step++) {
       // Check for conflicts
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          if (this.hasConflict(i, j)) {
-            conflicts.push({ row: j, col: i, name: this.schedule[i][j] });
+      for (let col = 0; col < this.cols; col++) {
+        for (let row = 0; row < this.rows; row++) {
+          if (this.hasConflict(row, col)) {
+            conflicts.push({
+              row: row,
+              col: col,
+              name: this.schedule[col][row],
+            });
           }
         }
       }
 
-      // if (conflicts.length === 0) {
-      //   return this.schedule;
-      // }
+      if (conflicts.length === 0) {
+        return this.schedule;
+      }
     }
-
-    // console.log(conflicts);
 
     const randomIndex = Math.floor(Math.random() * conflicts.length);
     const randomClass = conflicts[randomIndex];
-    console.log(conflicts);
+
+    // @TODO: check if randomClass has a better place (also check it's current place again)
+    //        in the schedule by looking potential conflics
+    // @TODO: move the randomClass the the "best" place in the schedule
+    // @TODO: if randomclass has no conflict, remove it from the conflicts array
   }
 
-  countConflics(currentClass) {
-    let counter = 0;
-
-    const cols = this.schedule.length;
-    const rows = this.schedule[0].length;
-
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {}
-    }
-  }
-
+  // Functions that checks whether or not a class has an conflict in the current place
   hasConflict(row, col) {
-    const currentClass = this.schedule[row][col];
+    const currentClass = this.schedule[col][row];
 
-    // Consaint 1: Classes with first digit can not have the same
-    const rows = this.schedule.length;
-    for (let i = 0; i < rows; i++) {
+    for (let i = 0; i < this.cols; i++) {
       let otherClass = this.schedule[i][col];
 
       if (
@@ -118,27 +114,8 @@ class CSP {
         return true;
       }
     }
-
-    // // Check constraint 2: Classes with the same first digit cannot be scheduled at the same time
-    // for (let i = 0; i < this.schedule[row].length; i++) {
-    //     if (i !== col && this.schedule[row][i]) {
-    //         const otherClass = this.schedule[row][i];
-    //         const otherFirstDigit = otherClass[2];
-    //         if (firstDigit === otherFirstDigit && classToCheck !== otherClass) {
-    //             // Check if it's not the same class (exception: MT501 and MT502)
-    //             return true; // Conflict found
-    //         }
-    //     }
-    // }
-
-    return false; // No conflict found
   }
 }
-
-// function scheduleClasses(csp) {
-//   // Implement class scheduling logic to satisfy constraints
-
-// }
 
 function main() {
   const times = [9, 10, 11, 12, 13, 14, 15, 16];
