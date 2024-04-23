@@ -129,4 +129,19 @@ public class CNFSolver {
         // Returns true if B.p is a subset of A.p and B.n is a subset of A.n
         return B.positive.containsAll(A.positive) && B.negative.containsAll(A.negative);
     }
+
+    // Display function
+    public static void displayCombinedKB(Set<Clause> KB) {
+        Set<String> combinedPositive = new HashSet<>();
+        Set<String> combinedNegative = new HashSet<>();
+
+        for (Clause clause : KB) {
+            combinedPositive.addAll(clause.positive);
+            combinedNegative.addAll(clause.negative);
+        }
+
+        System.out.println("Combined KB:");
+        System.out.println("Positive literals: " + combinedPositive);
+        System.out.println("Negative literals: " + combinedNegative + "\n");
+    }
 }
