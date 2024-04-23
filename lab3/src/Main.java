@@ -37,8 +37,6 @@ public class Main {
         Set<String> negative1 = new HashSet<>(Arrays.asList("sun", "money"));
         Clause clause1 = new Clause(positive1, negative1);
 
-        System.out.println((clause1.positive));
-
         Set<String> positive2 = new HashSet<>(Arrays.asList("ice", "movie"));
         Set<String> negative2 = new HashSet<>(Arrays.asList("money"));
         Clause clause2 = new Clause(positive2, negative2);
