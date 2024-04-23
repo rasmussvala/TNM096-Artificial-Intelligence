@@ -2,16 +2,6 @@ import java.util.*;
 
 public class CNF {
 
-    static class Clause {
-        Set<String> positive;
-        Set<String> negative;
-
-        public Clause(Set<String> positive, Set<String> negative) {
-            this.positive = positive;
-            this.negative = negative;
-        }
-    }
-
     // Applies the resolution inference rule to two input clauses, A and B,
     // in an attempt to derive a new clause, C
     public static Clause resolution(Clause A, Clause B) {

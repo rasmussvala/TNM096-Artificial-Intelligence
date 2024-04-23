@@ -9,14 +9,14 @@ public class Main {
          * // Creating test clauses A and B
          * Set<String> positiveA = new HashSet<>(Arrays.asList("c", "t"));
          * Set<String> negativeA = new HashSet<>(Arrays.asList("b"));
-         * CNF.Clause A = new CNF.Clause(positiveA, negativeA);
+         * Clause A = new Clause(positiveA, negativeA);
          * 
          * Set<String> positiveB = new HashSet<>(Arrays.asList("z", "b"));
          * Set<String> negativeB = new HashSet<>(Arrays.asList("c"));
-         * CNF.Clause B = new CNF.Clause(positiveB, negativeB);
+         * Clause B = new Clause(positiveB, negativeB);
          * 
          * // Applying resolution to derive
-         * CNF.Clause resultTest = CNF.resolution(A, B);
+         * Clause resultTest = resolution(A, B);
          * 
          * // Printing the result
          * System.out.println("Resulting Clause:");
@@ -35,26 +35,28 @@ public class Main {
         // Creating clauses representing the statements of the three people
         Set<String> positive1 = new HashSet<>(Arrays.asList("ice"));
         Set<String> negative1 = new HashSet<>(Arrays.asList("sun", "money"));
-        CNF.Clause clause1 = new CNF.Clause(positive1, negative1);
+        Clause clause1 = new Clause(positive1, negative1);
+
+        System.out.println((clause1.positive));
 
         Set<String> positive2 = new HashSet<>(Arrays.asList("ice", "movie"));
         Set<String> negative2 = new HashSet<>(Arrays.asList("money"));
-        CNF.Clause clause2 = new CNF.Clause(positive2, negative2);
+        Clause clause2 = new Clause(positive2, negative2);
 
         Set<String> positive3 = new HashSet<>(Arrays.asList("money"));
         Set<String> negative3 = new HashSet<>(Arrays.asList("movie"));
-        CNF.Clause clause3 = new CNF.Clause(positive3, negative3);
+        Clause clause3 = new Clause(positive3, negative3);
 
         Set<String> positive4 = new HashSet<>(Arrays.asList());
         Set<String> negative4 = new HashSet<>(Arrays.asList("movie", "ice"));
-        CNF.Clause clause4 = new CNF.Clause(positive4, negative4);
+        Clause clause4 = new Clause(positive4, negative4);
 
         Set<String> positive5 = new HashSet<>(Arrays.asList("sun", "money", "cry"));
         Set<String> negative5 = new HashSet<>(Arrays.asList());
-        CNF.Clause clause5 = new CNF.Clause(positive5, negative5);
+        Clause clause5 = new Clause(positive5, negative5);
 
         // Creating the initial knowledge base
-        Set<CNF.Clause> KB = new HashSet<>();
+        Set<Clause> KB = new HashSet<>();
         KB.add(clause1);
         KB.add(clause2);
         KB.add(clause3);
@@ -62,11 +64,11 @@ public class Main {
         KB.add(clause5);
 
         // Solving
-        Set<CNF.Clause> result = CNF.solver(KB);
+        Set<Clause> result = CNF.solver(KB);
 
         // Printing the result
         System.out.println("Resulting KB:");
-        for (CNF.Clause clause : result) {
+        for (Clause clause : result) {
             System.out.println("Positive literals: " + clause.positive);
             System.out.println("Negative literals: " + clause.negative + "\n");
         }
