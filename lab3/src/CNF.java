@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class CNFSolver {
+public class CNF {
 
     static class Clause {
         Set<String> positive;
