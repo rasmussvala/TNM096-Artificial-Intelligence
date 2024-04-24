@@ -62,6 +62,7 @@ public class CNF {
         do {
             S = new HashSet<>();
 
+            // check deepcopy
             KBPrime = new HashSet<>(KB);
 
             for (Clause A : KB) {
@@ -104,11 +105,15 @@ public class CNF {
             if (isSubsumedBy(A, B)) {
                 return KB;
             }
+        }
+
+        for (Clause B : KB) {
             // If A is a subset of B. A <= B
-            else if (isSubsumedBy(B, A)) {
+            if (isSubsumedBy(B, A)) {
                 toRemove.add(B);
             }
         }
+        
         KB.removeAll(toRemove);
         KB.add(A);
         return KB;

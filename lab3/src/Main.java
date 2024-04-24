@@ -66,9 +66,11 @@ public class Main {
 
         // Printing the result
         System.out.println("Resulting KB:");
-        for (Clause clause : result) {
-            System.out.println("Positive literals: " + clause.positive);
-            System.out.println("Negative literals: " + clause.negative + "\n");
-        }
+        CNF.displayCombinedKB(result);
+        
+        // for (Clause clause : result) {
+        // System.out.println("Positive literals: " + clause.positive);
+        // System.out.println("Negative literals: " + clause.negative + "\n");
+        // }
     }
 }
