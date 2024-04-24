@@ -122,8 +122,10 @@ public class CNF {
 
     // A function to check if B is a subset of A, B <= A
     public static boolean isSubsumedBy(Clause A, Clause B) {
-        // Returns true if B.p is a subset of A.p and B.n is a subset of A.n
-        return B.positive.containsAll(A.positive) && B.negative.containsAll(A.negative);
+        // Returns true if B.p is a subset of A.p and B.n is a
+        boolean positive = B.positive.containsAll(A.positive);
+        boolean negative = B.negative.containsAll(A.negative);
+        return positive && negative;
     }
 
     // Display function
