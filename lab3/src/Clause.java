@@ -14,4 +14,9 @@ public class Clause {
         this.positive = new HashSet<>(other.positive);
         this.negative = new HashSet<>(other.negative);
     }
+
+    public boolean equals(Clause other) {
+        // Check if positive and negative sets are equal
+        return this.positive.equals(other.positive) && this.negative.equals(other.negative);
+    }
 }

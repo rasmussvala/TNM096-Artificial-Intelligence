@@ -68,9 +68,12 @@ public class CNF {
             // Deep copy
             KBPrime = copySet(KB);
 
-            for (Clause A : KB) {
-                for (Clause B : KB) {
-                    if (A != B) {
+            Set<Clause> temp1 = copySet(KB);
+            Set<Clause> temp2 = copySet(KB);
+
+            for (Clause A : temp1) {
+                for (Clause B : temp2) {
+                    if (!A.equals(B)) {
                         Clause C = resolution(A, B);
                         if (C != null) {
                             addUniqueClause(S, C);
@@ -129,13 +132,32 @@ public class CNF {
         for (Clause B : copySet(KB)) {
             // If A is a subset of B. A <= B
             if (isSubsumedBy(B, A)) {
-                toRemove.add(B);
+                // toRemove.add(B);
+                addUniqueClause(toRemove, B);
             }
         }
 
-        KB.removeAll(toRemove);
-        KB.add(A);
+        if (toRemove.size() > 0) {
+            fun(KB, toRemove);
+        }
+        // KB.removeAll(toRemove); // <---- INSTEAD OF THIS, (IT DOESN'T WORK!) CREATE A
+        // NEW FUNCTION THAT TAKES IN
+        // KB AND toRemove AND THEN REMOVE ALL CLAUSES IN TOREMOVE FROM KB
+        // KB.add(A);
+        addUniqueClause(KB, A);
         return KB;
+    }
+
+    public static void fun(Set<Clause> KB, Set<Clause> remove) {
+        // Remove common elements from KB
+        for (Clause clause : remove) {
+            for (Clause otherClause : KB) {
+                if (clause.positive.equals(otherClause.positive) && clause.negative.equals(otherClause.negative)) {
+                    KB.remove(otherClause);
+                    break;
+                }
+            }
+        }
     }
 
     // A function to check if B is a subset of A, B <= A
