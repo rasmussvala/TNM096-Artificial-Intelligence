@@ -30,9 +30,29 @@ public class Main {
          * 
          */
 
+        /* ----- Part Middle ----- */
+
+        // Set<String> p1 = new HashSet<>(Arrays.asList("a", "b", "c"));
+        // Set<String> n1 = new HashSet<>(Arrays.asList());
+        // Clause clause1 = new Clause(p1, n1);
+
+        // Set<String> p2 = new HashSet<>(Arrays.asList("a"));
+        // Set<String> n2 = new HashSet<>(Arrays.asList("c"));
+        // Clause clause2 = new Clause(p2, n2);
+
+        // Set<String> p3 = new HashSet<>(Arrays.asList("a", "c"));
+        // Set<String> n3 = new HashSet<>(Arrays.asList("b"));
+        // Clause clause3 = new Clause(p3, n3);
+
+        // // Creating the initial knowledge base
+        // Set<Clause> KB = new HashSet<>();
+        // KB.add(clause1);
+        // KB.add(clause2);
+        // KB.add(clause3);
+
         /* ----- Part 2: Solver ----- */
 
-        // Creating clauses representing the statements of the three people
+        // Creating clauses representing the statements
         Set<String> p1 = new HashSet<>(Arrays.asList("ice"));
         Set<String> n1 = new HashSet<>(Arrays.asList("sun", "money"));
         Clause clause1 = new Clause(p1, n1);
@@ -67,7 +87,7 @@ public class Main {
         // Printing the result
         System.out.println("Resulting KB:");
         CNF.displayCombinedKB(result);
-        
+
         // for (Clause clause : result) {
         // System.out.println("Positive literals: " + clause.positive);
         // System.out.println("Negative literals: " + clause.negative + "\n");

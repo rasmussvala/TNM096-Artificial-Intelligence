@@ -4,7 +4,10 @@ public class CNF {
 
     // Applies the resolution inference rule to two input clauses, A and B,
     // in an attempt to derive a new clause, C
-    public static Clause resolution(Clause A, Clause B) {
+    public static Clause resolution(Clause Atemp, Clause Btemp) {
+
+        Clause A = new Clause(Atemp);
+        Clause B = new Clause(Btemp);
 
         // Create the intersection: A.p intersect B.n
         Set<String> intersection1 = new HashSet<>(A.positive);
@@ -62,7 +65,7 @@ public class CNF {
         do {
             S = new HashSet<>();
 
-            // Deepcopy
+            // Deep copy
             KBPrime = copySet(KB);
 
             for (Clause A : KB) {
@@ -70,7 +73,7 @@ public class CNF {
                     if (A != B) {
                         Clause C = resolution(A, B);
                         if (C != null) {
-                            S.add(C);
+                            addUniqueClause(S, C);
                         }
                     }
                 }
@@ -87,8 +90,24 @@ public class CNF {
         return KB;
     }
 
+    // very temp much wow
+    public static void addUniqueClause(Set<Clause> S, Clause newClause) {
+        boolean alreadyExists = false;
+        for (Clause clause : S) {
+            if (clause.positive.equals(newClause.positive) && clause.negative.equals(newClause.negative)) {
+                alreadyExists = true;
+                break;
+            }
+        }
+        if (!alreadyExists) {
+            S.add(newClause);
+        }
+    }
+
     // Incorporates a set of clauses S into the knowledge base KB
-    public static Set<Clause> incorporate(Set<Clause> S, Set<Clause> KB) {
+    public static Set<Clause> incorporate(Set<Clause> Stemp, Set<Clause> KB) {
+
+        Set<Clause> S = copySet(Stemp);
         for (Clause A : S) {
             KB = incorporateClause(A, KB);
         }
@@ -100,14 +119,14 @@ public class CNF {
     // If any clause in KB subsumes A, those clauses are removed from KB
     public static Set<Clause> incorporateClause(Clause A, Set<Clause> KB) {
         Set<Clause> toRemove = new HashSet<>();
-        for (Clause B : KB) {
+        for (Clause B : copySet(KB)) {
             // If B is a subset of A. B <= A
             if (isSubsumedBy(A, B)) {
                 return KB;
             }
         }
 
-        for (Clause B : KB) {
+        for (Clause B : copySet(KB)) {
             // If A is a subset of B. A <= B
             if (isSubsumedBy(B, A)) {
                 toRemove.add(B);
