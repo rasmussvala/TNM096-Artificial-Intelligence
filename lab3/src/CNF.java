@@ -62,8 +62,9 @@ public class CNF {
         do {
             S = new HashSet<>();
 
-            // check deepcopy
-            KBPrime = new HashSet<>(KB);
+            // Deepcopy
+            KBPrime = new HashSet<>();
+            KBPrime.addAll(KB);
 
             for (Clause A : KB) {
                 for (Clause B : KB) {
@@ -113,7 +114,7 @@ public class CNF {
                 toRemove.add(B);
             }
         }
-        
+
         KB.removeAll(toRemove);
         KB.add(A);
         return KB;
