@@ -8,4 +8,10 @@ public class Clause {
         this.positive = positive;
         this.negative = negative;
     }
+
+    // Copy constructor for deep copy
+    public Clause(Clause other) {
+        this.positive = new HashSet<>(other.positive);
+        this.negative = new HashSet<>(other.negative);
+    }
 }

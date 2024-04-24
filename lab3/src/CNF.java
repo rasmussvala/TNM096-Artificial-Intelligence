@@ -63,8 +63,7 @@ public class CNF {
             S = new HashSet<>();
 
             // Deepcopy
-            KBPrime = new HashSet<>();
-            KBPrime.addAll(KB);
+            KBPrime = copySet(KB);
 
             for (Clause A : KB) {
                 for (Clause B : KB) {
@@ -126,6 +125,15 @@ public class CNF {
         boolean positive = B.positive.containsAll(A.positive);
         boolean negative = B.negative.containsAll(A.negative);
         return positive && negative;
+    }
+
+    // A function to create a deep copy of a Set<Clause>
+    public static Set<Clause> copySet(Set<Clause> originalSet) {
+        Set<Clause> copiedSet = new HashSet<>();
+        for (Clause clause : originalSet) {
+            copiedSet.add(new Clause(clause));
+        }
+        return copiedSet;
     }
 
     // Display function
