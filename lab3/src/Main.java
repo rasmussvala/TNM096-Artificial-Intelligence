@@ -32,59 +32,59 @@ public class Main {
 
         /* ----- Part Middle ----- */
 
-        Set<String> p1 = new HashSet<>(Arrays.asList("a", "b", "c"));
-        Set<String> n1 = new HashSet<>(Arrays.asList());
-        Clause clause1 = new Clause(p1, n1);
-
-        Set<String> p2 = new HashSet<>(Arrays.asList("a"));
-        Set<String> n2 = new HashSet<>(Arrays.asList("c"));
-        Clause clause2 = new Clause(p2, n2);
-
-        Set<String> p3 = new HashSet<>(Arrays.asList("a", "c"));
-        Set<String> n3 = new HashSet<>(Arrays.asList("b"));
-        Clause clause3 = new Clause(p3, n3);
-
-        // Creating the initial knowledge base
-        Set<Clause> KB = new HashSet<>();
-        KB.add(clause1);
-        KB.add(clause2);
-        KB.add(clause3);
-
-        /* ----- Part 2: Solver ----- */
-
-        // //Creating clauses representing the statements
-        // Set<String> p1 = new HashSet<>(Arrays.asList("ice"));
-        // Set<String> n1 = new HashSet<>(Arrays.asList("sun", "money"));
+        // Set<String> p1 = new HashSet<>(Arrays.asList("a", "b", "c"));
+        // Set<String> n1 = new HashSet<>(Arrays.asList());
         // Clause clause1 = new Clause(p1, n1);
 
-        // Set<String> p2 = new HashSet<>(Arrays.asList("ice", "movie"));
-        // Set<String> n2 = new HashSet<>(Arrays.asList("money"));
+        // Set<String> p2 = new HashSet<>(Arrays.asList("a"));
+        // Set<String> n2 = new HashSet<>(Arrays.asList("c"));
         // Clause clause2 = new Clause(p2, n2);
 
-        // Set<String> p3 = new HashSet<>(Arrays.asList("money"));
-        // Set<String> n3 = new HashSet<>(Arrays.asList("movie"));
+        // Set<String> p3 = new HashSet<>(Arrays.asList("da", "dc"));
+        // Set<String> n3 = new HashSet<>(Arrays.asList("db"));
         // Clause clause3 = new Clause(p3, n3);
 
-        // Set<String> p4 = new HashSet<>(Arrays.asList());
-        // Set<String> n4 = new HashSet<>(Arrays.asList("movie", "ice"));
-        // Clause clause4 = new Clause(p4, n4);
-
-        // Set<String> p5 = new HashSet<>(Arrays.asList("sun", "money", "cry"));
-        // Set<String> n5 = new HashSet<>(Arrays.asList());
-        // Clause clause5 = new Clause(p5, n5);
-
-        // Set<String> p6 = new HashSet<>(Arrays.asList("movie"));
-        // Set<String> n6 = new HashSet<>(Arrays.asList());
-        // Clause clause6 = new Clause(p6, n6);
-
-        // Creating the initial knowledge base
+        // // Creating the initial knowledge base
         // Set<Clause> KB = new HashSet<>();
         // KB.add(clause1);
         // KB.add(clause2);
         // KB.add(clause3);
-        // KB.add(clause4);
-        // KB.add(clause5);
-        // KB.add(clause6);
+
+        /* ----- Part 2: Solver ----- */
+
+        //Creating clauses representing the statements
+        Set<String> p1 = new HashSet<>(Arrays.asList("ice"));
+        Set<String> n1 = new HashSet<>(Arrays.asList("sun", "money"));
+        Clause clause1 = new Clause(p1, n1);
+
+        Set<String> p2 = new HashSet<>(Arrays.asList("ice", "movie"));
+        Set<String> n2 = new HashSet<>(Arrays.asList("money"));
+        Clause clause2 = new Clause(p2, n2);
+
+        Set<String> p3 = new HashSet<>(Arrays.asList("money"));
+        Set<String> n3 = new HashSet<>(Arrays.asList("movie"));
+        Clause clause3 = new Clause(p3, n3);
+
+        Set<String> p4 = new HashSet<>(Arrays.asList());
+        Set<String> n4 = new HashSet<>(Arrays.asList("movie", "ice"));
+        Clause clause4 = new Clause(p4, n4);
+
+        Set<String> p5 = new HashSet<>(Arrays.asList("sun", "money", "cry"));
+        Set<String> n5 = new HashSet<>(Arrays.asList());
+        Clause clause5 = new Clause(p5, n5);
+
+        Set<String> p6 = new HashSet<>(Arrays.asList("movie"));
+        Set<String> n6 = new HashSet<>(Arrays.asList());
+        Clause clause6 = new Clause(p6, n6);
+
+        //Creating the initial knowledge base
+        Set<Clause> KB = new HashSet<>();
+        KB.add(clause1);
+        KB.add(clause2);
+        KB.add(clause3);
+        KB.add(clause4);
+        KB.add(clause5);
+        KB.add(clause6);
 
         // Solving
         Set<Clause> result = CNF.solver(KB);
