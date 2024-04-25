@@ -90,7 +90,6 @@ public class Main {
         Set<Clause> result = CNF.solver(KB);
 
         // Printing the result
-        System.out.println("Resulting KB:");
         CNF.displayCombinedKB(result);
     }
 }
