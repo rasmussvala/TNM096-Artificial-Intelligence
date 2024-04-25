@@ -86,13 +86,11 @@ public class CNF {
             
             KB = incorporate(S, KB);
 
-            displayCombinedKB(KB);
-
         } while (!KBPrime.equals(KB));
         return KB;
     }
 
-    // very temp much wow
+    // Adds only unique clauses
     public static void addUniqueClause(Set<Clause> S, Clause newClause) {
         boolean alreadyExists = false;
         for (Clause clause : S) {
@@ -131,21 +129,19 @@ public class CNF {
         for (Clause B : copySet(KB)) {
             // If A is a subset of B. A <= B
             if (isSubsumedBy(A, B)) {
-                //toRemove.add(B);
                 addUniqueClause(toRemove, B);
             }
         }
 
         if (toRemove.size() > 0) {
-            fun(KB, toRemove);
+            removeClause(KB, toRemove);
         }
-        // KB.removeAll(toRemove);
-        // KB.add(A);
+
         addUniqueClause(KB, A);
         return KB;
     }
 
-    public static void fun(Set<Clause> KB, Set<Clause> remove) {
+    public static void removeClause(Set<Clause> KB, Set<Clause> remove) {
         // Remove common elements from KB
         for (Clause clause : remove) {
             for (Clause otherClause : KB) {
@@ -157,9 +153,9 @@ public class CNF {
         }
     }
 
-    // A function to check if B is a subset of A, B <= A
+    // A function to check if A is a subset of B, A <= B
     public static boolean isSubsumedBy(Clause A, Clause B) {
-        // Returns true if B.p is a subset of A.p and B.n is a
+        
         boolean positive = B.positive.containsAll(A.positive);
         boolean negative = B.negative.containsAll(A.negative);
         return positive && negative;
