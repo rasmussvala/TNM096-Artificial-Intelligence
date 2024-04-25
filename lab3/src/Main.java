@@ -73,6 +73,10 @@ public class Main {
         Set<String> n5 = new HashSet<>(Arrays.asList());
         Clause clause5 = new Clause(p5, n5);
 
+        Set<String> p6 = new HashSet<>(Arrays.asList("movie"));
+        Set<String> n6 = new HashSet<>(Arrays.asList());
+        Clause clause6 = new Clause(p6, n6);
+
         // Creating the initial knowledge base
         Set<Clause> KB = new HashSet<>();
         KB.add(clause1);
@@ -80,6 +84,7 @@ public class Main {
         KB.add(clause3);
         KB.add(clause4);
         KB.add(clause5);
+        KB.add(clause6);
 
         // Solving
         Set<Clause> result = CNF.solver(KB);

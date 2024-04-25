@@ -55,41 +55,40 @@ public class CNF {
 
     // The function that tries to solve the CNF
     public static Set<Clause> solver(Set<Clause> KB) {
-
-        // incorporate (sv integrera)
+        // Incorporate clauses into the KB
         KB = incorporate(KB, new HashSet<>());
-
+    
         Set<Clause> S;
         Set<Clause> KBPrime;
-
+    
         do {
             S = new HashSet<>();
-
-            // Deep copy
+    
+            // Deep copy of KB for systematic iteration
             KBPrime = copySet(KB);
 
-            Set<Clause> temp1 = copySet(KB);
-            Set<Clause> temp2 = copySet(KB);
-
-            for (Clause A : temp1) {
-                for (Clause B : temp2) {
-                    if (!A.equals(B)) {
+            for (Clause A : KB) {
+                for (Clause B : KB) {
+                    if (A != B) {
+                        // Apply resolution to derive new clause
                         Clause C = resolution(A, B);
                         if (C != null) {
+                            // Add unique clause to S
                             addUniqueClause(S, C);
                         }
                     }
                 }
             }
-
+    
             if (S.isEmpty()) {
                 return KB;
             }
-
+            
             KB = incorporate(S, KB);
-        } while (!KBPrime.equals(KB));
 
-        // Return KB
+            displayCombinedKB(KB);
+
+        } while (!KBPrime.equals(KB));
         return KB;
     }
 
@@ -110,8 +109,8 @@ public class CNF {
     // Incorporates a set of clauses S into the knowledge base KB
     public static Set<Clause> incorporate(Set<Clause> Stemp, Set<Clause> KB) {
 
-        Set<Clause> S = copySet(Stemp);
-        for (Clause A : S) {
+        //Set<Clause> S = copySet(Stemp);
+        for (Clause A : Stemp) {
             KB = incorporateClause(A, KB);
         }
         return KB;
@@ -124,15 +123,15 @@ public class CNF {
         Set<Clause> toRemove = new HashSet<>();
         for (Clause B : copySet(KB)) {
             // If B is a subset of A. B <= A
-            if (isSubsumedBy(A, B)) {
+            if (isSubsumedBy(B, A)) {
                 return KB;
             }
         }
 
         for (Clause B : copySet(KB)) {
             // If A is a subset of B. A <= B
-            if (isSubsumedBy(B, A)) {
-                // toRemove.add(B);
+            if (isSubsumedBy(A, B)) {
+                //toRemove.add(B);
                 addUniqueClause(toRemove, B);
             }
         }
@@ -140,9 +139,7 @@ public class CNF {
         if (toRemove.size() > 0) {
             fun(KB, toRemove);
         }
-        // KB.removeAll(toRemove); // <---- INSTEAD OF THIS, (IT DOESN'T WORK!) CREATE A
-        // NEW FUNCTION THAT TAKES IN
-        // KB AND toRemove AND THEN REMOVE ALL CLAUSES IN TOREMOVE FROM KB
+        // KB.removeAll(toRemove);
         // KB.add(A);
         addUniqueClause(KB, A);
         return KB;
