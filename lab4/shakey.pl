@@ -35,10 +35,10 @@ box_location(room1, box2).
 box_location(room1, box3).
 box_location(room1, box4).
 
-light_on(switch1, true).
-light_on(switch2, false).
-light_on(switch3, false).
-light_on(switch4, true).
+light_on(room1, true).
+light_on(room2, false).
+light_on(room3, false).
+light_on(room4, true).
 
 % Predicate to check if Shakey is at a location
 at(shakey, Location) :-
@@ -50,10 +50,11 @@ go(A, C) :-
     connected(A, B),
     connected(B, C).
 
-push(b, X, Y) :- 
-    at(b,X),
-    connected(X, Y),
-    location(b, Y).
-
-
+% Push a box into a room
+push(Box, X, Y) :- 
+    at(shakey, X),            
+    light_on(X, true),                
+    connected(X, Y),            
+    box_location(X, Box),       
+    box_location(Y, _).    
 
