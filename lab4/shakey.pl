@@ -1,12 +1,21 @@
 % Actions
 act(
     go(X,Y), % Action name
-    [at(shakey,X), on(shakey,floor), connected(X,Y), room(X), room(Y)],
-    [at(shakey,X)], % Is now false
-    [at(shakey,Y)]  % Is now true
+    [at(shakey, X), on(shakey, floor), connected(X,Y), room(X), room(Y)],
+    [at(shakey, X)], % Is now false
+    [at(shakey, Y)]  % Is now true
 ).
 
-goal_state( [at(shakey,room1) ]).
+act(
+    push(B,X,Y),
+    [at(shakey, X), on(shakey, floor), light_on(X, true), box_location(X, B), connected(X, Y), room(X), room(Y), box(B)],
+    [box_location(X, B), at(shakey, X)],
+    [box_location(Y, B), at(shakey, Y)]
+).
+
+%goal_state( [at(shakey, room1)]).
+%goal_state( [light_on(room1, false)]).
+goal_state( [box_location(room2, box2)]).
 
 initial_state([
 
@@ -37,11 +46,18 @@ box(box2),
 box(box3),
 box(box4),
 
+% Switch
+switch(switch1),
+switch(switch2),
+switch(switch3),
+switch(switch4),
+
 % Define locations of switches and boxes
 switch_location(room1, switch1),
 switch_location(room2, switch2),
 switch_location(room3, switch3),
 switch_location(room4, switch4),
+
 box_location(room1, box1),
 box_location(room1, box2),
 box_location(room1, box3),
@@ -50,6 +66,7 @@ box_location(room1, box4),
 light_on(room1, true),
 light_on(room2, false),
 light_on(room3, false),
-light_on(room4, true)
+light_on(room4, true),
+light_on(corridor, true)
 
 ]).
