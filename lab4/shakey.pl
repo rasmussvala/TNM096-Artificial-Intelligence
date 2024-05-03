@@ -7,15 +7,46 @@ act(
 ).
 
 act(
-    push(B,X,Y),
+    push(B,X,Y), % Action name
     [at(shakey, X), on(shakey, floor), light_on(X, true), box_location(X, B), connected(X, Y), room(X), room(Y), box(B)],
-    [box_location(X, B), at(shakey, X)],
-    [box_location(Y, B), at(shakey, Y)]
+    [box_location(X, B), at(shakey, X)], % Is now false
+    [box_location(Y, B), at(shakey, Y)]  % Is now true
 ).
+
+act(
+    climbUp(B),
+    [on(shakey, floor), box(B), at(shakey, X), box_location(X, B), room(X)],
+    [on(shakey, floor)],
+    [on(shakey, B)]
+).
+
+act(
+    climbDown(B),
+    [on(shakey, B), box(B), at(shakey, X), box_location(X, B), room(X)],
+    [on(shakey, B)],
+    [on(shakey, floor)]
+).
+
+act(
+    turnOnLight(X),
+    [on(shakey,B), box(B), at(shakey,X), box_location(X,B), room(X), light_on(X, false)],
+    [light_on(X, false)],
+    [light_on(X, true)]
+).
+
+act(
+    turnOffLight(X),
+    [on(shakey,B), box(B), at(shakey,X), box_location(X,B), room(X), light_on(X, true)],
+    [light_on(X, true)],
+    [light_on(X, false)]
+).
+
 
 %goal_state( [at(shakey, room1)]).
 %goal_state( [light_on(room1, false)]).
 goal_state( [box_location(room2, box2)]).
+%goal_state( [on(shakey, box1)]).
+
 
 initial_state([
 
