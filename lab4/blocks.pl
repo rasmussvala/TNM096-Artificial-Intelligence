@@ -43,7 +43,7 @@ act(putdown_on_block(X, Y),
 goal_state([
     on(X, Y), 
     on(Y, Z)  
-]):- object(X),green(Y),blue(Z).
+]):- object(X), green(Y), blue(Z).
 
 % Initial state
 initial_state([
